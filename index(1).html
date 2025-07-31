@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GEO - Global Enchantment Orchestrator</title>
+    <style>
+        /* CSS Reset and Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            overflow-x: hidden;
+            color: #ffffff;
+            background: #0a0a1a;
+            
+        }
+
+        /* 3D Background Animation */
+        #canvas-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            opacity: 0.8;
+        }
+
+        canvas {
+            display: block;
+        }
+
+        /* Modern UI Components */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        header {
+            padding: 30px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 28px;
+            font-weight: 700;
+            background: linear-gradient(90deg, #00c6ff, #0072ff);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-decoration: none;
+            position: fixed;
+         top: 20px;
+         left: 40px;
+            
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+        }
+
+        nav ul li {
+            margin-left: 30px;
+        }
+
+        nav ul li a {
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            font-size: 16px;
+        }
+
+        nav ul li a:hover {
+            color: #00c6ff;
+        }
+
+        .hero {
+            height: 80vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: flex-start;
+        }
+
+        .hero h1 {
+            font-size: 64px;
+            margin-bottom: 20px;
+            background: linear-gradient(90deg, #ffffff, #a1c4fd);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            line-height: 1.2;
+        }
+
+        .hero p {
+            font-size: 20px;
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 40px;
+            max-width: 700px;
+            line-height: 1.6;
+        }
+
+        .cta-button {
+            display: inline-block;
+            padding: 15px 40px;
+            background: linear-gradient(90deg, #00c6ff, #0072ff);
+            color: white;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 18px;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 20px rgba(0, 114, 255, 0.3);
+        }
+
+        .cta-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 30px rgba(0, 114, 255, 0.4);
+        }
+
+        /* Floating Particles Effect */
+        .particles {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        .particle {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.5);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 48px;
+            }
+            
+            .hero p {
+                font-size: 18px;
+            }
+            
+            nav ul li {
+                margin-left: 15px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero h1 {
+                font-size: 36px;
+            }
+            
+            .hero p {
+                font-size: 16px;
+            }
+            
+            header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            nav ul {
+                margin-top: 20px;
+            }
+        }
+     img {
+     	width: 300px;
+         height: 300px;
+         
+         
+     }
+     .ctb-button {
+            display: inline-block;
+            padding: 15px 40px;
+            background: linear-gradient(90deg, #00c6ff, #0072ff);
+            color: white;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 550;
+            font-size: 18px;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 20px rgba(0, 114, 255, 0.3);
+            position: absolute;
+            top: 900px;
+        }
+
+        .ctb-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 30px rgba(0, 114, 255, 0.4);
+        }
+        /* --- বেসিক স্টাইল এবং ফন্ট ইম্পোর্ট --- */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
+
+
+
+/* --- নিউজ কার্ডের মূল কাঠামো --- */
+.news-card {
+    background-color: #ffffff;
+    border-radius: 20px; /* কোণাগুলো গোলাকার করা হয়েছে */
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1); /* সুন্দর শ্যাডো */
+    overflow: hidden; /* কার্ডের বাইরের অংশ লুকিয়ে রাখা হয়েছে */
+    width: 100%;
+    max-width: 380px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease; /* হোভার ইফেক্টের জন্য ট্রানজিশন */
+    position: absolute;
+    top:  2060px;
+}
+
+/* --- কার্ডের উপর মাউস নিলে যা হবে --- */
+.news-card:hover {
+    transform: translateY(-10px); /* কার্ডটি সামান্য উপরে উঠবে */
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15); /* শ্যাডো আরও স্পষ্ট হবে */
+}
+
+/* --- কার্ডের ছবি --- */
+.card-image img {
+    width: 100%;
+    height: 220px;
+    object-fit: cover; /* ছবিকে বিকৃত না করে কন্টেইনারে ফিট করা */
+    display: block; /* ছবির নিচে অতিরিক্ত স্পেস দূর করা */
+}
+
+/* --- কার্ডের কন্টেন্ট এলাকা --- */
+.card-content {
+    padding: 25px;
+}
+
+/* --- খবরের বিভাগ বা ক্যাটাগরি --- */
+.card-category {
+    display: inline-block;
+    background-color: #007bff; /* নীল রঙ */
+    color: #ffffff;
+    padding: 6px 15px;
+    border-radius: 20px; /* পিল বা ক্যাপসুল আকৃতি */
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    margin-bottom: 15px;
+}
+
+/* --- খবরের শিরোনাম --- */
+.card-title {
+    font-size: 1.4rem;
+    font-weight: 700;
+    margin: 0 0 15px 0;
+    line-height: 1.3;
+}
+
+.card-title a {
+    text-decoration: none;
+    color: #2c3e50; /* গাঢ় নীল-ধূসর রঙ */
+    transition: color 0.3s ease;
+}
+
+.card-title a:hover {
+    color: #007bff; /* হোভার করলে রঙ পরিবর্তন হবে */
+}
+
+/* --- খবরের সংক্ষিপ্ত বিবরণ --- */
+.card-excerpt {
+    font-size: 0.95rem;
+    color: #555;
+    line-height: 1.6;
+    margin: 0 0 20px 0;
+}
+
+/* --- লেখকের তথ্য এবং তারিখ --- */
+.card-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.85rem;
+    color: #777;
+    border-top: 1px solid #e0e0e0; /* উপরে একটি হালকা দাগ */
+    padding-top: 15px;
+}
+
+.author-info {
+    display: flex;
+    align-items: center;
+}
+
+
+
+.author-name {
+    font-weight: 600;
+}
+    </style>
+</head>
+<body>
+	<div class="logo">
+   <img style="width: 30px;
+         height: 30px;
+         border-radius: 50%;
+         position: fixed;
+         top: 20px;
+         left: 8px;" src="https://i.postimg.cc/fWPYDZQR/Green-and-Blue-Modern-Youtube-Channel-Tech-Review-Logo-1-1.jpg">
+   </div>
+    <!-- 3D Background Animation -->
+    <div id="canvas-container"></div>
+    
+    <!-- Floating Particles -->
+    <div class="particles" id="particles"></div>
+    
+    <!-- Modern UI Content -->
+    <div class="container">
+                 <header>
+            <a href="#" class="logo">GEO AI</a>
+       </header>
+            <nav>
+                <ul>
+                	<br>
+                	<br>
+                    <li><a href="#News">&nbsp;&nbsp;&nbsp;News&nbsp;&nbsp;&nbsp;</a></li>
+                    <li><a href="#">&nbsp;&nbsp;&nbsp;Features&nbsp;&nbsp;&nbsp;</a></li>
+
+                    <li><a href="http://localhost:2435/storage/emulated/0/Ahanaf.html/Loading_about.html">About</a></li>
+                    <li><a href="#">&nbsp;&nbsp;&nbsp;Contact&nbsp;&nbsp;&nbsp;</a></li>
+                </ul>
+            </nav>
+    
+  <img src="https://i.ibb.co/ymq2q7M0/Copilot-20250706-172140.png" alt="Copilot-20250706-172140" border="0"></img>
+        <section class="hero">
+            <h1>Global Enchantment Orchestrator</h1>
+            <p>বাংলাদেশের সর্বপ্রথম বৈশ্বিক উন্নয়ন সমন্বয়কারী-কৃত্রিম বুদ্ধিমতা Geo AI। যা বাংলাদেশের সংস্কৃতি ও ইসলাম ধর্মের উপর প্রশিক্ষিত করে তৈরি করা হয়েছে</p>
+            <a href="https://geo-about-us.vercel.app/" class="cta-button">About Us ➙</a>
+            <a href="https://geo-ai-bd.vercel.app/" class="ctb-button">Get started ➚</a>
+   
+        </section>
+    </div>
+
+    <!-- নিউজ কার্ড শুরু -->
+    <article class="news-card">
+        <!-- কার্ডের ছবি -->
+        <figure class="card-image">
+            <a href="#">
+  
+        </figure>
+       
+        <!-- কার্ডের কন্টেন্ট -->
+        <div class="card-content">
+            <!-- খবরের বিভাগ -->
+            <span class="card-category">প্রযুক্তি</span>
+            
+            <!-- খবরের শিরোনাম -->
+            <h2 class="card-title">
+                <a href="#">জিও এ আই কবে বাংলাদেশের লঞ্চ হবে?</a>
+            </h2>
+            
+            <!-- খবরের সংক্ষিপ্ত বিবরণ -->
+            <p class="card-excerpt">
+                জিও এআই কবে বাংলাদেশের লঞ্চ হবে এই সম্পর্কে এখনো কোনো তথ্য পাওয়া যায়নি Geo.LLC কোম্পানি থেকে । জিও এআইয়ের কাজ এখনো সম্পন্ন হয়নি এটি এখনো ডেভলপার মোডে আছে এটাই কাজ খুব শীঘ্রই সম্পূর্ণ করা হবে ইতিমধ্যে ভুল ইরোর এবং বিভিন্ন সমস্যা ইত্যাদি কাজ হচ্ছে। Geo.LLC কোম্পানি থেকে জানাই গিয়েছে একটি খুব শীঘ্রই বাংলাদেশের সম্পূর্ণভাবে লঞ্চ হতে যাচ্ছে
+            </p>
+            
+            <!-- লেখকের তথ্য এবং প্রকাশের তারিখ -->
+            <div class="card-meta">
+                <div class="author-info">
+                    
+                    <span class="author-name">আহানাফ আহমদ</span>
+                </div>
+                <time class="post-date" datetime="2023-10-27">জুলাই ৭, ২০২৫</time>
+            </div>
+        </div>
+    </article>
+        <section id="News"></section>
+    <!-- নিউজ কার্ড শেষ -->
+    
+ 
+
+    
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script>
+        // 3D Background Animation with Three.js
+        const canvasContainer = document.getElementById('canvas-container');
+        
+        // Scene setup
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+        
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setPixelRatio(window.devicePixelRatio);
+        canvasContainer.appendChild(renderer.domElement);
+        
+        // Particles for 3D background
+        const particlesGeometry = new THREE.BufferGeometry();
+        const particlesCount = 1500;
+        
+        const posArray = new Float32Array(particlesCount * 3);
+        
+        for(let i = 0; i < particlesCount * 3; i++) {
+            posArray[i] = (Math.random() - 0.5) * 10;
+        }
+        
+        particlesGeometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
+        
+        const particlesMaterial = new THREE.PointsMaterial({
+            size: 0.02,
+            color: 0x00a1ff,
+            transparent: true,
+            opacity: 0.8,
+            blending: THREE.AdditiveBlending
+        });
+        
+        const particlesMesh = new THREE.Points(particlesGeometry, particlesMaterial);
+        scene.add(particlesMesh);
+        
+        // Add floating geometry
+        const geometry = new THREE.TorusGeometry(1, 0.4, 16, 60);
+        const material = new THREE.MeshBasicMaterial({ 
+            color: 0x0072ff,
+            wireframe: true,
+            transparent: true,
+            opacity: 0.5
+        });
+        
+        const torus = new THREE.Mesh(geometry, material);
+        scene.add(torus);
+        
+        // Camera position
+        camera.position.z = 3;
+        
+        // Animation loop
+        function animate() {
+            requestAnimationFrame(animate);
+            
+            particlesMesh.rotation.x += 0.0005;
+            particlesMesh.rotation.y += 0.0005;
+            
+            torus.rotation.x += 0.005;
+            torus.rotation.y += 0.005;
+            
+            renderer.render(scene, camera);
+        }
+        
+        animate();
+        
+        // Window resize handler
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+        
+        // Floating particles effect
+        const particles = document.getElementById('particles');
+        const particleCount = 30;
+        
+        for (let i = 0; i < particleCount; i++) {
+            const particle = document.createElement('div');
+            particle.classList.add('particle');
+            
+            // Random properties
+            const size = Math.random() * 5 + 2;
+            const posX = Math.random() * window.innerWidth;
+            const posY = Math.random() * window.innerHeight;
+            const delay = Math.random() * 5;
+            const duration = Math.random() * 10 + 10;
+            const opacity = Math.random() * 0.5 + 0.1;
+            
+            particle.style.width = `${size}px`;
+            particle.style.height = `${size}px`;
+            particle.style.left = `${posX}px`;
+            particle.style.top = `${posY}px`;
+            particle.style.animationDelay = `${delay}s`;
+            particle.style.animationDuration = `${duration}s`;
+            particle.style.opacity = opacity;
+            
+            particles.appendChild(particle);
+        }
+        
+        // Add animation to CSS for particles
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes float {
+                0% {
+                    transform: translateY(0) translateX(0);
+                    opacity: 1;
+                }
+                50% {
+                    transform: translateY(-100px) translateX(50px);
+                    opacity: 0.5;
+                }
+                100% {
+                    transform: translateY(0) translateX(0);
+                    opacity: 1;
+                }
+            }
+            
+            .particle {
+                animation: float linear infinite;
+                will-change: transform;
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+</body>
+</html>
+
+
